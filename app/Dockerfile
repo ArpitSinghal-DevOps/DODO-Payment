@@ -7,7 +7,8 @@ ENV PYTHONDONTWRITEBYTECODE=1 \
     PIP_NO_CACHE_DIR=1
 
 COPY requirements.txt .
-RUN addgroup -S app && adduser -S -G app -u 10001 app \
+RUN apk upgrade --no-cache \
+    && addgroup -S app && adduser -S -G app -u 10001 app \
     && pip install --no-cache-dir -r requirements.txt
 
 COPY app.py .
