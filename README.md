@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # ledger-api
 
 Payments microservice for tokenising PANs and serving transaction metadata.
@@ -17,3 +18,7 @@ Deployed on Kubernetes in the `payments` namespace.
 | GET    | `/transactions` | Recent transaction records           |
 | POST   | `/import`       | Import a YAML configuration blob     |
 | GET    | `/fetch?url=`   | Fetch a remote resource by URL       |
+=======
+# DODO-Payment
+DODO Payment for Security &amp; DevOps Engineer 
+>>>>>>> 0c107b1a7b88680517a539c4fd38a71be7099169
