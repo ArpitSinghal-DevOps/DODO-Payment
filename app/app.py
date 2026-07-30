@@ -1,5 +1,8 @@
 import os
 import hashlib
+import ipaddress
+import socket
+from urllib.parse import urlparse
 
 import requests
 import yaml
@@ -11,9 +14,38 @@ STRIPE_API_KEY = os.environ.get("STRIPE_API_KEY", "")
 DB_PASSWORD = os.environ.get("DB_PASSWORD", "")
 
 LEDGER = [
-    {"id": "txn_1001", "pan": "4242424242424242", "amount": 4200, "currency": "USD", "status": "captured"},
-    {"id": "txn_1002", "pan": "5555555555554444", "amount": 1899, "currency": "EUR", "status": "refunded"},
+    {"id": "txn_1001", "pan_last4": "4242", "amount": 4200, "currency": "USD", "status": "captured"},
+    {"id": "txn_1002", "pan_last4": "4444", "amount": 1899, "currency": "EUR", "status": "refunded"},
 ]
+
+MAX_FETCH_BYTES = 2048
+FETCH_TIMEOUT_SECONDS = 5
+
+
+def _is_public_address(address):
+    ip = ipaddress.ip_address(address)
+    return ip.is_global
+
+
+def _validate_fetch_url(url):
+    parsed = urlparse(url)
+    if parsed.scheme not in {"http", "https"} or not parsed.hostname:
+        return None
+
+    try:
+        addresses = socket.getaddrinfo(parsed.hostname, parsed.port, type=socket.SOCK_STREAM)
+    except socket.gaierror:
+        return None
+
+    if not addresses:
+        return None
+
+    for address in addresses:
+        host = address[4][0]
+        if not _is_public_address(host):
+            return None
+
+    return parsed.geturl()
 
 
 @app.route("/health")
@@ -48,8 +80,12 @@ def import_config():
 @app.route("/fetch")
 def fetch():
     url = request.args.get("url", "")
-    resp = requests.get(url, timeout=5)
-    return jsonify(status_code=resp.status_code, body=resp.text[:2048])
+    safe_url = _validate_fetch_url(url)
+    if safe_url is None:
+        return jsonify(error="URL is not allowed"), 400
+
+    resp = requests.get(safe_url, timeout=FETCH_TIMEOUT_SECONDS, allow_redirects=False)
+    return jsonify(status_code=resp.status_code, body=resp.text[:MAX_FETCH_BYTES])
 
 
 if __name__ == "__main__":

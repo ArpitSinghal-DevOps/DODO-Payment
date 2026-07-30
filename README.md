@@ -7,6 +7,7 @@ Deployed on Kubernetes in the `payments` namespace.
 
 - [Task 1 - Deploy and Harden the Workload](task1/README.md)
 - [Task 2 - Build, Scan, Sign, Attest, and Deploy](task2/README.md)
+- [Task 3 - Application Security Remediation](task3/README.md)
 
 ## Endpoints
 
