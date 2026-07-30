@@ -1,0 +1,135 @@
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: default-deny
+  namespace: payments
+  labels:
+    app.kubernetes.io/name: payments
+    app.kubernetes.io/component: network-policy
+    app.kubernetes.io/part-of: ledger-api
+spec:
+  podSelector: {}
+  policyTypes:
+    - Ingress
+    - Egress
+---
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: allow-ledger-api-ingress
+  namespace: payments
+  labels:
+    app.kubernetes.io/name: ledger-api
+    app.kubernetes.io/component: network-policy
+    app.kubernetes.io/part-of: ledger-api
+spec:
+  podSelector:
+    matchLabels:
+      app.kubernetes.io/name: ledger-api
+      app.kubernetes.io/component: api
+  policyTypes:
+    - Ingress
+  ingress:
+    - from:
+        - podSelector:
+            matchLabels:
+              app.kubernetes.io/name: reporting
+              app.kubernetes.io/component: neighbour
+      ports:
+        - protocol: TCP
+          port: 8080
+    - from:
+        - namespaceSelector:
+            matchLabels:
+              kubernetes.io/metadata.name: ingress-nginx
+      ports:
+        - protocol: TCP
+          port: 8080
+---
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: allow-reporting-ingress
+  namespace: payments
+  labels:
+    app.kubernetes.io/name: reporting
+    app.kubernetes.io/component: network-policy
+    app.kubernetes.io/part-of: ledger-api
+spec:
+  podSelector:
+    matchLabels:
+      app.kubernetes.io/name: reporting
+      app.kubernetes.io/component: neighbour
+  policyTypes:
+    - Ingress
+  ingress:
+    - from:
+        - podSelector:
+            matchLabels:
+              app.kubernetes.io/name: ledger-api
+              app.kubernetes.io/component: api
+      ports:
+        - protocol: TCP
+          port: 8080
+---
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: allow-reporting-to-ledger-and-dns
+  namespace: payments
+  labels:
+    app.kubernetes.io/name: reporting
+    app.kubernetes.io/component: network-policy
+    app.kubernetes.io/part-of: ledger-api
+spec:
+  podSelector:
+    matchLabels:
+      app.kubernetes.io/name: reporting
+      app.kubernetes.io/component: neighbour
+  policyTypes:
+    - Egress
+  egress:
+    - to:
+        - podSelector:
+            matchLabels:
+              app.kubernetes.io/name: ledger-api
+              app.kubernetes.io/component: api
+      ports:
+        - protocol: TCP
+          port: 8080
+    - to:
+        - namespaceSelector:
+            matchLabels:
+              kubernetes.io/metadata.name: kube-system
+      ports:
+        - protocol: UDP
+          port: 53
+        - protocol: TCP
+          port: 53
+---
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: allow-ledger-api-dns-only
+  namespace: payments
+  labels:
+    app.kubernetes.io/name: ledger-api
+    app.kubernetes.io/component: network-policy
+    app.kubernetes.io/part-of: ledger-api
+spec:
+  podSelector:
+    matchLabels:
+      app.kubernetes.io/name: ledger-api
+      app.kubernetes.io/component: api
+  policyTypes:
+    - Egress
+  egress:
+    - to:
+        - namespaceSelector:
+            matchLabels:
+              kubernetes.io/metadata.name: kube-system
+      ports:
+        - protocol: UDP
+          port: 53
+        - protocol: TCP
+          port: 53
