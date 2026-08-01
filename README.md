@@ -5,6 +5,7 @@ Deployed on Kubernetes in the `payments` namespace.
 
 ## DevSecOps Assignment
 
+- [Full Structure Report](Full-structure-report.md)
 - [Task 1 - Deploy and Harden the Workload](task1/README.md)
 - [Task 2 - Build, Scan, Sign, Attest, and Deploy](task2/README.md)
 - [Task 3 - Istio and Zero Trust](task3/README.md)
