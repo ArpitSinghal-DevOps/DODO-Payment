@@ -5,19 +5,19 @@
 This task is split into two parts:
 
 - Part A: passive reconnaissance of `dodopayments.tech` using public sources only.
-- Part B: active testing only against an explicitly authorized target. No target is bundled in this workspace, so Part B is documented as pending until the authorized target is provided.
+- Part B: active testing against the authorized local target bundled with this workspace, the deployed `ledger-api` service in `payments`.
 
 ## Rules of Engagement
 
 - Passive recon only for `dodopayments.tech` and related public properties.
 - No DoS, no stress testing, no social engineering.
-- No active probing of production Dodo Payments hosts unless a target is explicitly authorized for this task.
+- Active testing is limited to the local `ledger-api` service in `payments`.
 - Do not fabricate findings. Only report verified observations.
 
 ## What is included
 
 - `task4/attack-surface-report.md`: passive attack surface inventory for public Dodo Payments properties.
-- `task4/penetration-test-report.md`: PDF-ready report structure for the authorized target, with the current status noted as pending because no authorized target is bundled here.
+- `task4/penetration-test-report.md`: report for the authorized local target with verified findings and evidence.
 
 ## Tools Covered
 
@@ -42,20 +42,21 @@ The assignment references the following tools and their roles:
 ## Current Status
 
 - Part A: drafted from public sources.
-- Part B: pending an explicitly authorized target.
+- Part B: executed against the local `ledger-api` target with verified findings.
 - No commits were made.
-
 
 ## Screenshots To Capture
 
 - Status page showing the public service breakdown.
 - Documentation page showing the public dashboard link.
-- Third-party summary showing the `.tech` redirect family.
+- Local terminal showing the port-forward to `ledger-api`.
+- `GET /transactions` response showing full PAN exposure.
+- `GET /fetch?url=http://example.com` response body and headers.
 - Final report file tree for submission.
 
 ## Next Verification Checklist
 
 - Confirm the report links render from the top-level README.
 - Confirm the attack-surface report only contains verified public observations.
-- Confirm the penetration-test report states that Part B is pending an authorized target.
+- Confirm the penetration-test report includes only reproduced findings.
 - Confirm no fabricated findings are present.
