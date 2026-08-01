@@ -8,6 +8,7 @@ Deployed on Kubernetes in the `payments` namespace.
 - [Task 1 - Deploy and Harden the Workload](task1/README.md)
 - [Task 2 - Build, Scan, Sign, Attest, and Deploy](task2/README.md)
 - [Task 3 - Istio and Zero Trust](task3/README.md)
+- [Task 4 - Reconnaissance and Penetration Testing](task4/README.md)
 
 ## Endpoints
 
