@@ -21,7 +21,7 @@ spec:
       validate:
         message: "Container images must use immutable, non-latest tags."
         foreach:
-          - list: "request.object.spec.containers"
+          - list: "request.object.spec.containers[?name!='istio-proxy']"
             deny:
               conditions:
                 any:

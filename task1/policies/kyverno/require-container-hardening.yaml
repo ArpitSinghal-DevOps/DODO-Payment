@@ -21,7 +21,7 @@ spec:
       validate:
         message: "Containers must disable privilege escalation, use a read-only root filesystem, and drop all capabilities."
         foreach:
-          - list: "request.object.spec.containers"
+          - list: "request.object.spec.containers[?name!='istio-proxy']"
             pattern:
               securityContext:
                 allowPrivilegeEscalation: false

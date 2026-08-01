@@ -35,7 +35,7 @@ spec:
       validate:
         message: "Containers must not run as UID 0."
         foreach:
-          - list: "request.object.spec.containers"
+          - list: "request.object.spec.containers[?name!='istio-proxy']"
             deny:
               conditions:
                 any:

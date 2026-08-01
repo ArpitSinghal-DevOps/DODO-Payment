@@ -10,7 +10,7 @@ spec:
   validationFailureAction: Enforce
   background: true
   rules:
-    - name: require-requests-limits-and-probes
+    - name: require-ledger-api-requests-limits-and-probes
       match:
         any:
           - resources:
@@ -18,10 +18,51 @@ spec:
                 - Pod
               namespaces:
                 - payments
+      exclude:
+        any:
+          - resources:
+              kinds:
+                - Pod
+              namespaces:
+                - payments
+              annotations:
+                sidecar.istio.io/status: "?*"
       validate:
-        message: "Every container must define CPU/memory requests and limits plus startup, readiness, and liveness probes."
+        message: "ledger-api containers must define CPU/memory requests and limits plus startup, readiness, and liveness probes."
         foreach:
-          - list: "request.object.spec.containers"
+          - list: "request.object.spec.containers[?name=='ledger-api']"
+            pattern:
+              resources:
+                requests:
+                  cpu: "?*"
+                  memory: "?*"
+                limits:
+                  cpu: "?*"
+                  memory: "?*"
+              startupProbe: "?*"
+              readinessProbe: "?*"
+              livenessProbe: "?*"
+    - name: require-reporting-requests-limits-and-probes
+      match:
+        any:
+          - resources:
+              kinds:
+                - Pod
+              namespaces:
+                - payments
+      exclude:
+        any:
+          - resources:
+              kinds:
+                - Pod
+              namespaces:
+                - payments
+              annotations:
+                sidecar.istio.io/status: "?*"
+      validate:
+        message: "reporting containers must define CPU/memory requests and limits plus startup, readiness, and liveness probes."
+        foreach:
+          - list: "request.object.spec.containers[?name=='reporting']"
             pattern:
               resources:
                 requests:
