@@ -314,10 +314,3 @@ Current state: the app was modernized enough for the assignment, but it still re
 Recommendation: use a maintained base image, lock dependencies with hashes, and add dependency update automation.
 
 Why: long-lived payment services need deliberate patch management.
-
-## Submission Notes
-
-- No commits were made.
-- All task documentation lives in the repository.
-- Screenshots should be captured from the live cluster and the Task 4 local test runs.
-- The report is meant to be read alongside the task-specific READMEs, not instead of them.
